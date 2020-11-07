@@ -1,46 +1,35 @@
-
-import os
 import csv
-
-### 検索ツールサンプル
-### これをベースに課題の内容を追記してください
+import os
 
 # 検索ソース
 source=["ねずこ","たんじろう","きょうじゅろう","ぎゆう","げんや","かなお","ぜんいつ"]
+source_b=["ねずこ","たんじろう","きょうじゅろう","ぎゆう","げんや","かなお","ぜんいつ"]
 
-# ソースチェック（戻り：0:リストに存在しない　1:リストに存在する）
-def chkSource(str):
-    source=["ねずこ","たんじろう","きょうじゅろう","ぎゆう","げんや","かなお","ぜんいつ"]
-    index=0
-    while index < len(source):
-        if str == source[index]:
-            return 1
-        index = index + 1
-    return 0
 
-### 検索ツール
-def search():
-    ### ここに検索ロジックを書く
+### csv読込み
+def readCSV():
     csvFile =input("CSVファイルを指定してください（フルパス） >>> ")
     if os.path.exists(csvFile):
         with open(csvFile) as f:
-            index = 0
-            for line in f:
-                listWork = line.split(',')
-                lenList = len(listWork)
-                while index < lenList:
-                    if chkSource(listWork[index]):
-                        index = index + 1
-                        continue
-                    else:
-                        source.append(listWork[index])  
-                    index = index + 1
-    else:
-        print('指定したファイルは存在しません')
-        return
-    
-    print('リスト（更新後）：')
-    print(source)
+            listCSV = f.read()
+            f.close()
+            return listCSV.split(',')
 
+### リスト更新
+def updateSource(listCSV, source):    
+    index = 0
+    while index < len(listCSV):
+        if not(listCSV[index] in source):
+            source.append(listCSV[index])
+        index = index + 1
+    return source
+
+### メイン処理
 if __name__ == "__main__":
-    search()
+    ###csv読込み
+    listCSV = readCSV()
+    ###リスト更新
+    updateSource(listCSV, source)
+    ###更新結果
+    print("鬼滅の登場人物の（更新前）⇒",source_b)
+    print("鬼滅の登場人物の（更新後）⇒",source)
